@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
 
 export const Content = styled.div`
   width: 100%;
-  max-width: 320px;
+  max-width: 360px;
   background: #fff;
   text-align: center;
   border-radius: 4px;
@@ -60,6 +60,14 @@ export const Content = styled.div`
       &:hover {
         background: ${darken(0.05, '#fc2b6e')};
       }
+    }
+
+    span {
+      text-align: left;
+      font-weight: bold;
+      font-size: 12px;
+      margin-bottom: 10px;
+      color: #fc2b6e;
     }
   }
 `;
