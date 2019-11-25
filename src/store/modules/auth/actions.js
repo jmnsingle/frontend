@@ -12,7 +12,7 @@ export function sigInSuccess(token, user) {
   };
 }
 
-export function signFilure() {
+export function signFailure() {
   return {
     type: '@auth/SIGN_FAILURE',
   };
