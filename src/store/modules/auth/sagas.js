@@ -16,14 +16,28 @@ export function* signIn({ payload }) {
     });
     const { token, user } = response.data;
 
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+
     yield put(sigInSuccess(token, user));
 
     history.push('/dashboard');
   } catch (err) {
     yield put(signFailure());
-
     toast.error('Falha na autenticação, verifique seus dados');
   }
 }
 
-export default all([takeLatest('@auth/SIGN_IN_REQUEST', signIn)]);
+export function setToken({ payload }) {
+  if (!payload) return;
+
+  const { token } = payload.atuh;
+
+  if (token) {
+    api.defaults.Authorization = `Bearer ${token}`;
+  }
+}
+
+export default all([
+  takeLatest('persist/REHYDRATE', setToken),
+  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+]);

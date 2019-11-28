@@ -27,6 +27,8 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     "no-param-reassign": "off",
+    "no-useless-return": "off",
+    "react/button-has-type": "off",
     'react/jsx-filename-extension': [
       'warn',
       { extensions:['.jsx', '.js'] }
