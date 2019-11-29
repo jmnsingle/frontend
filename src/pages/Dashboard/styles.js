@@ -1,18 +1,19 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin: 10px 100px;
-
+  margin: 0px auto;
+  max-width: 1100px;
   display: flex;
   align-items: center;
   flex-direction: column;
 `;
 
 export const Content = styled.div`
-  display: flex;
   background: #fff;
   width: 100%;
   border-radius: 4px;
+
+  display: flex;
 
   table {
     border-spacing: 0;
@@ -21,8 +22,7 @@ export const Content = styled.div`
   }
 
   tr {
-    height: 32px;
-    border-bottom: 1px solid #000;
+    line-height: 30px;
   }
 `;
 
@@ -76,6 +76,12 @@ export const TitleIdade = styled.td`
   text-align: center;
   font-size: 14;
 `;
+
+export const TitleAction = styled.td`
+  text-align: center;
+  font-size: 14;
+`;
+
 export const Action = styled.td`
   text-align: center;
   font-size: 14;

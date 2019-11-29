@@ -17,3 +17,9 @@ export function signFailure() {
     type: '@auth/SIGN_FAILURE',
   };
 }
+
+export function signOUt() {
+  return {
+    type: '@auth/SIGN_OUT',
+  };
+}

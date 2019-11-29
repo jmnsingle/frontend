@@ -8,16 +8,16 @@ import rootReducer from './modules/rootReducer';
 import rootSaga from './modules/rootSaga';
 
 const sagaMonitor =
+  // eslint-disable-next-line no-undef
   process.env.NODE_ENV === 'development'
     ? console.tron.createSagaMonitor()
     : null;
 
 const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
 
-const middlewares = [sagaMiddleware];
+const middleawares = [sagaMiddleware];
 
-const store = createStore(persistReducers(rootReducer), middlewares);
-
+const store = createStore(persistReducers(rootReducer), middleawares);
 const persistor = persistStore(store);
 
 sagaMiddleware.run(rootSaga);

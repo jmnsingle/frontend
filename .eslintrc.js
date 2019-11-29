@@ -29,6 +29,9 @@ module.exports = {
     "no-param-reassign": "off",
     "no-useless-return": "off",
     "react/button-has-type": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-console": "off",
+    "react/jsx-props-no-spreading": "off",
     'react/jsx-filename-extension': [
       'warn',
       { extensions:['.jsx', '.js'] }

@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
+import { differenceInCalendarYears, parseISO } from 'date-fns';
+
+import api from '~/services/api';
 
 import {
   Container,
@@ -13,10 +16,36 @@ import {
   TitleName,
   TitleEmail,
   TitleIdade,
+  TitleAction,
   Action,
 } from './styles';
 
 export default function Dashboard() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    async function loadStudents() {
+      console.log('funcao');
+      const response = await api.get('/students');
+
+      setStudents(
+        response.data.map(item => ({
+          ...item,
+          idade: differenceInCalendarYears(
+            new Date(),
+            parseISO(
+              item.birth_date
+                .split('/')
+                .reverse()
+                .join('-')
+            )
+          ),
+        }))
+      );
+    }
+    loadStudents();
+  }, []);
+
   return (
     <Container>
       <TableHeader>
@@ -35,100 +64,21 @@ export default function Dashboard() {
               <TitleName>NOME</TitleName>
               <TitleEmail>EMAIL</TitleEmail>
               <TitleIdade>IDADE</TitleIdade>
-              <Action>AÇÂO</Action>
+              <TitleAction>AÇÂO</TitleAction>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
-            <tr>
-              <Name>Juliano Nogueira</Name>
-              <Email>devjuliano@gmail.com</Email>
-              <Idade>22</Idade>
-              <td>
-                <ButtonEdit>editar</ButtonEdit>
-                <ButtonDelete>apagar</ButtonDelete>
-              </td>
-            </tr>
+            {students.map(item => (
+              <tr key={item.id}>
+                <Name>{item.name}</Name>
+                <Email>{item.email}</Email>
+                <Idade>{item.idade} anos</Idade>
+                <Action>
+                  <ButtonEdit>editar</ButtonEdit>
+                  <ButtonDelete>apagar</ButtonDelete>
+                </Action>
+              </tr>
+            ))}
           </tbody>
         </table>
       </Content>
