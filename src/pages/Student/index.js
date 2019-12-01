@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { differenceInCalendarYears, parseISO } from 'date-fns';
+import history from '~/services/history';
 
 import api from '~/services/api';
 
@@ -20,12 +21,11 @@ import {
   Action,
 } from './styles';
 
-export default function Dashboard() {
+export default function Student() {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
     async function loadStudents() {
-      console.log('funcao');
       const response = await api.get('/students');
 
       setStudents(
@@ -51,7 +51,7 @@ export default function Dashboard() {
       <TableHeader>
         <strong>Gerenciando alunos</strong>
         <aside>
-          <button>
+          <button onClick={() => history.push('/student_register')}>
             <MdAdd color="#fff" size={25} /> Cadastrar{' '}
           </button>
           <input type="text" placeholder="Buscar aluno" />

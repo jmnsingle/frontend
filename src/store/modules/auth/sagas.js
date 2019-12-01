@@ -20,7 +20,7 @@ export function* signIn({ payload }) {
 
     yield put(sigInSuccess(token, user));
 
-    history.push('/dashboard');
+    history.push('/student');
   } catch (err) {
     yield put(signFailure());
     toast.error('Falha na autenticação, verifique seus dados');
@@ -30,11 +30,10 @@ export function* signIn({ payload }) {
 export function setToken({ payload }) {
   if (!payload) return;
 
-  const { token } = payload.atuh;
+  const { token } = payload.auth;
 
   if (token) {
-    console.log('okokokok');
-    api.defaults.Authorization = `Bearer ${token}`;
+    api.defaults.headers.Authorization = `Bearer ${token}`;
   }
 }
 

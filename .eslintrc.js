@@ -32,6 +32,8 @@ module.exports = {
     "import/no-extraneous-dependencies": "off",
     "no-console": "off",
     "react/jsx-props-no-spreading": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "camelcase": "off",
     'react/jsx-filename-extension': [
       'warn',
       { extensions:['.jsx', '.js'] }
