@@ -46,12 +46,20 @@ export default function Student() {
     loadStudents();
   }, []);
 
+  async function handleDelete(id) {
+    try {
+      await api.delete(`students/${id}`);
+      window.location.reload();
+    } catch (err) {
+      console.tron.log(err);
+    }
+  }
   return (
     <Container>
       <TableHeader>
         <strong>Gerenciando alunos</strong>
         <aside>
-          <button onClick={() => history.push('/student_register')}>
+          <button onClick={() => history.push('/createStudent')}>
             <MdAdd color="#fff" size={25} /> Cadastrar{' '}
           </button>
           <input type="text" placeholder="Buscar aluno" />
@@ -74,8 +82,16 @@ export default function Student() {
                 <Email>{item.email}</Email>
                 <Idade>{item.idade} anos</Idade>
                 <Action>
-                  <ButtonEdit>editar</ButtonEdit>
-                  <ButtonDelete>apagar</ButtonDelete>
+                  <ButtonEdit
+                    onClick={() =>
+                      history.push('/updateStudent', { response: item })
+                    }
+                  >
+                    editar
+                  </ButtonEdit>
+                  <ButtonDelete onClick={() => handleDelete(item.id)}>
+                    apagar
+                  </ButtonDelete>
                 </Action>
               </tr>
             ))}

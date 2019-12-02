@@ -1,8 +1,10 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
+
+import api from '~/services/api';
 import history from '~/services/history';
 
 import InputField from '~/components/Input';
@@ -17,10 +19,11 @@ import {
   Contain,
 } from './styles';
 
-import { studentRegisterRequest } from '~/store/modules/student/actions';
+export default function UpdateStudent({ location }) {
+  const userId = useSelector(state => state.user.profile.id);
+  const studentId = location.state.response.id;
 
-export default function NewStudent() {
-  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Nome obrigatório.'),
@@ -31,17 +34,35 @@ export default function NewStudent() {
     weight: Yup.string().required('Peso é obrigatório.'),
     height: Yup.string().required('Altura é obrigatória.'),
   });
+  async function handleUpdate({ name, email, birth_date, height, weight }) {
+    try {
+      setLoading(true);
+      await api.put(`students/${studentId}`, {
+        name,
+        email,
+        birth_date,
+        height,
+        weight,
+      });
 
-  async function handleRegister({ name, email, birth_date, height, weight }) {
-    dispatch(studentRegisterRequest(name, email, birth_date, height, weight));
+      history.push('/student');
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.tron.log(err);
+    }
   }
 
   return (
     <Container>
-      <Form schema={schema} onSubmit={handleRegister}>
+      <Form
+        initialData={location.state.response}
+        schema={schema}
+        onSubmit={handleUpdate}
+      >
         <Contain>
           <Header>
-            <strong>Gerenciando alunos</strong>
+            <strong>Editar aluno</strong>
             <aside>
               <ButtonBack
                 type="button"
@@ -50,7 +71,7 @@ export default function NewStudent() {
                 <MdArrowBack color="#fff" size={20} /> Voltar
               </ButtonBack>
               <ButtonSafe type="submit">
-                <MdCheck color="#fff" size={20} /> Cadastrar
+                <MdCheck color="#fff" size={20} /> Salvar
               </ButtonSafe>
             </aside>
           </Header>
@@ -79,7 +100,7 @@ export default function NewStudent() {
           <Hr>
             <Contain>
               <label htmlFor="birth_date">IDADE</label>
-              <InputField size="small" name="birth_date" type="number" />
+              <InputField size="small" name="birth_date" type="date" />
             </Contain>
             <Contain>
               <label htmlFor="weight">
