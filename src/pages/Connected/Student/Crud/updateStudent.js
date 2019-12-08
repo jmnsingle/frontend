@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -13,7 +12,6 @@ import Button from '~/components/Button';
 import { Container, Content, Header, Hr, Contain } from './styles';
 
 export default function UpdateStudent({ location }) {
-  const userId = useSelector(state => state.user.profile.id);
   const studentId = location.state.response.id;
 
   const [loading, setLoading] = useState(false);

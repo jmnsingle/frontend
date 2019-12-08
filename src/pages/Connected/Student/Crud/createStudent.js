@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -14,8 +13,6 @@ import { Container, Content, Header, Hr, Contain } from './styles';
 
 export default function CreateStudent() {
   const [loading, setLoading] = useState(false);
-  const [maskWeight, setMaskWeight] = useState('');
-  const [maskHeight, setMaskHeight] = useState('');
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Nome obrigatório.'),

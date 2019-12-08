@@ -28,7 +28,7 @@ export default function Enrollment() {
             }
           ),
           end: format(
-            parseISO(item.start_date),
+            parseISO(item.end_date),
             " dd 'de' MMMM ' de ' yyy",
 
             {
@@ -90,15 +90,15 @@ export default function Enrollment() {
                 <Action>
                   <Button
                     background="edit"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() =>
+                      history.push('/updateEnrollment', { response: item })
+                    }
                   >
                     <MdEdit color="#fff" size={25} />
                   </Button>
                   <Button
                     background="danger"
-                    onClick={() =>
-                      history.push('/update_enrollment', { response: item })
-                    }
+                    onClick={() => handleDelete(item.id)}
                   >
                     <MdDelete color="#fff" size={25} />
                   </Button>

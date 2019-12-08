@@ -1,52 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { parseISO, format, addMonths } from 'date-fns';
+import React, { useState, useEffect, useMemo } from 'react';
+import { format, addMonths } from 'date-fns';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import Select from 'react-select';
-
-import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 import history from '~/services/history';
+import { formatPrice } from '~/util/format';
 
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
 import { Container, Content, Header, Hr, Contain, Date } from './styles';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
 export default function CreateStudent() {
   const [loading, setLoading] = useState(false);
-  const [price, setPrice] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [students, setStudents] = useState([]);
-  const [plans, setPlans] = useState([]);
 
-  const schema = Yup.object().shape({
-    name: Yup.string().required('Nome obrigatório.'),
-    title: Yup.string()
-      .required('Escolha um plano')
-      .required('Email obrigatório.'),
-    start_date: Yup.string('Início obrigatório'),
-  });
+  const [plans, setPlans] = useState([]);
+  const [students, setStudents] = useState([]);
+  const [infoPrice, setInfoPrice] = useState([]);
+  const [infoStudent, setInfoStudent] = useState([]);
+
+  const [price, setPrice] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState('');
 
   useEffect(() => {
-    async function handleStudents() {
+    async function handleData() {
       const responseStudent = await api.get('students');
       setStudents(
         responseStudent.data.map(item => ({
+          ...item,
           value: item.id,
           label: item.name,
         }))
       );
-    }
 
-    async function handlePlans() {
       const responsePlan = await api.get('Plans');
 
       setPlans(
@@ -57,38 +47,50 @@ export default function CreateStudent() {
         }))
       );
     }
-    handleStudents();
-    handlePlans();
+
+    handleData();
   }, []);
 
   async function handleRegister() {
-    console.log(plans);
-    console.log(students);
-    /* try {
-      setLoading(true);
-      await api.post(`enrollments`, {
-        name,
-        email,
-        birth_date,
-        height,
-        weight,
-      });
+    // eslint-disable-next-line eqeqeq
+    if (infoPrice.id == '' || infoStudent.id == '' || startDate == '') {
+      toast.error('Complete todos os campos para cadastrar!');
+    } else {
+      try {
+        setLoading(true);
+        await api.post(`enrollments/${infoPrice.id}/${infoStudent.id}`, {
+          start_date: startDate,
+        });
 
-      history.push('/student');
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      console.tron.log(err);
-    } */
+        history.push('/enrollment');
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        if (err.response.status === 401) {
+          toast.error('Usuário já possui matrícula');
+        } else {
+          toast.error(
+            'Falha no cadastro. Verifique se os dados estão corretos.'
+          );
+        }
+      }
+    }
   }
 
-  function handleDate(date) {
-    console.log(addMonths(date, 3));
-  }
+  // eslint-disable-next-line no-unused-vars
+  const formatDate = useMemo(() => {
+    // eslint-disable-next-line eqeqeq
+    if (startDate != '' && infoPrice != '') {
+      setEndDate(
+        format(addMonths(startDate, infoPrice.duration), 'dd/MM/yyyy')
+      );
+      setPrice(infoPrice.price * infoPrice.duration);
+    }
+  }, [startDate, infoPrice]);
 
   return (
     <Container>
-      <Form schema={schema} onSubmit={handleRegister}>
+      <Form onSubmit={handleRegister}>
         <Header>
           <strong>Gerenciando matrículas</strong>
           <aside>
@@ -107,8 +109,11 @@ export default function CreateStudent() {
         <Content>
           <Hr>
             <Contain large>
-              <label htmlFor="name">ALUNO</label>
-              <Select options={students} />
+              <label htmlFor="aluno">ALUNO</label>
+              <Select
+                options={students}
+                onChange={value => setInfoStudent(value)}
+              />
             </Contain>
           </Hr>
           <Hr>
@@ -116,31 +121,34 @@ export default function CreateStudent() {
               <label htmlFor="plano">PLANO</label>
               <Select
                 options={plans}
-                getOptionValue={plan => plan.id}
-                onChange={value => setPrice(value.price * value.duration)}
+                onChange={value => setInfoPrice(value)}
+                // onBlur={formatDate(startDate)}
               />
             </Contain>
             <Contain>
               <label htmlFor="data_inicio">DATA DE INÍCIO</label>
               <Date
                 selected={startDate}
-                //onSelect={this.handleSelect}
                 onChange={date => setStartDate(date)}
-                onBlur={() => handleDate(startDate)}
               />
             </Contain>
             <Contain>
               <label htmlFor="data_termino">DATA DE TÉRMINO</label>
               <InputField
+                name="date_end"
                 readOnly
                 size="short"
-                name="end_date"
                 value={endDate}
               />
             </Contain>
             <Contain>
               <label htmlFor="valor_final">VALOR FINAL</label>
-              <InputField readOnly size="short" name="price" />
+              <InputField
+                name="final_price"
+                value={formatPrice(price)}
+                readOnly
+                size="short"
+              />
             </Contain>
           </Hr>
         </Content>
