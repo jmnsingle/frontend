@@ -61,12 +61,12 @@ export default function Student() {
         <table>
           <thead>
             <tr>
-              <LabelText title alignText="left">
+              <LabelText title="true" alignText="left">
                 NOME
               </LabelText>
-              <LabelText title>EMAIL</LabelText>
-              <LabelText title>IDADE</LabelText>
-              <LabelText title alignText="right">
+              <LabelText title="true">EMAIL</LabelText>
+              <LabelText title="true">IDADE</LabelText>
+              <LabelText title="true" alignText="right">
                 AÇÂO
               </LabelText>
             </tr>

@@ -7,8 +7,7 @@ import logo from '../../assets/logoH.png';
 
 import { signOUt } from '~/store/modules/auth/actions';
 
-export default function Header(item) {
-  console.log(item);
+export default function Header() {
   const dispatch = useDispatch();
 
   const profile = useSelector(state => state.user.profile);
@@ -22,18 +21,10 @@ export default function Header(item) {
       <Content>
         <nav>
           <img src={logo} alt="Gympoint" />
-          <Link item={item} to="/student">
-            Alunos
-          </Link>
-          <Link item={item} to="/plan">
-            Planos
-          </Link>
-          <Link item={item} to="/enrollment">
-            Matrículas
-          </Link>
-          <Link item={item} to="/help">
-            Pedidos de auxílio
-          </Link>
+          <Link to="/student">Alunos</Link>
+          <Link to="/plan">Planos</Link>
+          <Link to="/enrollment">Matrículas</Link>
+          <Link to="/help">Pedidos de auxílio</Link>
         </nav>
         <aside>
           <strong>{profile.name}</strong>

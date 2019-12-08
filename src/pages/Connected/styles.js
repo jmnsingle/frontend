@@ -12,6 +12,7 @@ export const Content = styled.div`
   background: #fff;
   width: 100%;
   border-radius: 4px;
+  margin-top: 25px;
 
   display: flex;
 
@@ -23,10 +24,12 @@ export const Content = styled.div`
 `;
 
 export const TableHeader = styled.div`
+  width: 100%;
+  margin-top: 25px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 
   strong {
     font-size: 24px;
@@ -41,6 +44,7 @@ export const TableHeader = styled.div`
       border-radius: 4px;
       background: rgba(255, 255, 255, 0.8);
       padding: 4px;
+      margin-left: 10px;
 
       display: flex;
       align-self: center;

@@ -10,15 +10,7 @@ import history from '~/services/history';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
-import {
-  Container,
-  Content,
-  Header,
-  ButtonSafe,
-  ButtonBack,
-  Hr,
-  Contain,
-} from './styles';
+import { Container, Content, Header, Hr, Contain } from './styles';
 
 export default function UpdateStudent({ location }) {
   const userId = useSelector(state => state.user.profile.id);
@@ -66,13 +58,13 @@ export default function UpdateStudent({ location }) {
             <strong>Editar aluno</strong>
             <aside>
               <Button
-                backgrround="back"
+                background="back"
                 type="button"
                 onClick={() => history.push('/student')}
               >
                 <MdArrowBack color="#fff" size={20} /> Voltar
               </Button>
-              <Button backgrround="add" type="submit">
+              <Button background="add" type="submit">
                 <MdCheck color="#fff" size={20} /> Salvar
               </Button>
             </aside>

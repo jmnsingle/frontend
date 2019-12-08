@@ -52,23 +52,21 @@ export default function CreateStudent() {
   return (
     <Container>
       <Form schema={schema} onSubmit={handleRegister}>
-        <Contain>
-          <Header active="student">
-            <strong>Gerenciando alunos</strong>
-            <aside>
-              <Button
-                background="back"
-                type="button"
-                onClick={() => history.push('/student')}
-              >
-                <MdArrowBack color="#fff" size={20} /> Voltar
-              </Button>
-              <Button background="add" type="submit">
-                <MdCheck color="#fff" size={20} /> Cadastrar
-              </Button>
-            </aside>
-          </Header>
-        </Contain>
+        <Header active="student">
+          <strong>Gerenciando alunos</strong>
+          <aside>
+            <Button
+              background="back"
+              type="button"
+              onClick={() => history.push('/student')}
+            >
+              <MdArrowBack color="#fff" size={20} /> Voltar
+            </Button>
+            <Button background="add" type="submit">
+              <MdCheck color="#fff" size={20} /> Cadastrar
+            </Button>
+          </aside>
+        </Header>
         <Content>
           <Hr>
             <Contain>

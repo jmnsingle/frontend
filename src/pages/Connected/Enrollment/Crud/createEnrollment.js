@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { parseISO, format, addMonths } from 'date-fns';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import Select from 'react-select';
+
 import * as Yup from 'yup';
 
 import api from '~/services/api';
@@ -11,15 +12,18 @@ import history from '~/services/history';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
-import { Container, Content, Header, Hr, Contain, SelectField } from './styles';
+import { Container, Content, Header, Hr, Contain, Date } from './styles';
 
 const options = [
-  { id: '1', title: 'joana' },
-  { id: '2', title: 'joana' },
-  { id: '3', title: 'joana' },
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' },
 ];
 export default function CreateStudent() {
   const [loading, setLoading] = useState(false);
+  const [price, setPrice] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [students, setStudents] = useState([]);
   const [plans, setPlans] = useState([]);
 
@@ -34,13 +38,24 @@ export default function CreateStudent() {
   useEffect(() => {
     async function handleStudents() {
       const responseStudent = await api.get('students');
-      setStudents(responseStudent.data);
+      setStudents(
+        responseStudent.data.map(item => ({
+          value: item.id,
+          label: item.name,
+        }))
+      );
     }
 
     async function handlePlans() {
       const responsePlan = await api.get('Plans');
 
-      setPlans(responsePlan.data);
+      setPlans(
+        responsePlan.data.map(item => ({
+          ...item,
+          value: item.id,
+          label: item.title,
+        }))
+      );
     }
     handleStudents();
     handlePlans();
@@ -67,53 +82,61 @@ export default function CreateStudent() {
     } */
   }
 
+  function handleDate(date) {
+    console.log(addMonths(date, 3));
+  }
+
   return (
     <Container>
       <Form schema={schema} onSubmit={handleRegister}>
-        <Contain>
-          <Header active="student">
-            <strong>Gerenciando matrículas</strong>
-            <aside>
-              <Button
-                background="back"
-                type="button"
-                onClick={() => history.push('/enrollment')}
-              >
-                <MdArrowBack color="#fff" size={20} /> Voltar
-              </Button>
-              <Button background="add" type="submit">
-                <MdCheck color="#fff" size={20} /> Cadastrar
-              </Button>
-            </aside>
-          </Header>
-        </Contain>
+        <Header>
+          <strong>Gerenciando matrículas</strong>
+          <aside>
+            <Button
+              background="back"
+              type="button"
+              onClick={() => history.push('/enrollment')}
+            >
+              <MdArrowBack color="#fff" size={20} /> Voltar
+            </Button>
+            <Button background="add" type="submit">
+              <MdCheck color="#fff" size={20} /> Cadastrar
+            </Button>
+          </aside>
+        </Header>
         <Content>
           <Hr>
             <Contain large>
               <label htmlFor="name">ALUNO</label>
-              <Select
-                options={plans}
-                getOptionLabel={plan => plan.name}
-                getOptionValue={plan => plan.id}
-              />
+              <Select options={students} />
             </Contain>
           </Hr>
           <Hr>
             <Contain>
               <label htmlFor="plano">PLANO</label>
               <Select
-                options={students}
-                getOptionLabel={students.title}
-                getOptionValue={students.id}
+                options={plans}
+                getOptionValue={plan => plan.id}
+                onChange={value => setPrice(value.price * value.duration)}
               />
             </Contain>
             <Contain>
               <label htmlFor="data_inicio">DATA DE INÍCIO</label>
-              <InputField type="date" size="short" name="start_date" />
+              <Date
+                selected={startDate}
+                //onSelect={this.handleSelect}
+                onChange={date => setStartDate(date)}
+                onBlur={() => handleDate(startDate)}
+              />
             </Contain>
             <Contain>
               <label htmlFor="data_termino">DATA DE TÉRMINO</label>
-              <InputField readOnly size="short" name="end_date" />
+              <InputField
+                readOnly
+                size="short"
+                name="end_date"
+                value={endDate}
+              />
             </Contain>
             <Contain>
               <label htmlFor="valor_final">VALOR FINAL</label>

@@ -67,14 +67,14 @@ export default function Enrollment() {
         <table>
           <thead>
             <tr>
-              <LabelText title alignText="left">
+              <LabelText title="true" alignText="left">
                 ALUNO
               </LabelText>
-              <LabelText title>PLANO</LabelText>
-              <LabelText title>INÍCIO</LabelText>
-              <LabelText title>TÉRMINO</LabelText>
-              <LabelText title>ATIVA</LabelText>
-              <LabelText title alignText="right">
+              <LabelText title="true">PLANO</LabelText>
+              <LabelText title="true">INÍCIO</LabelText>
+              <LabelText title="true">TÉRMINO</LabelText>
+              <LabelText title="true">ATIVA</LabelText>
+              <LabelText title="true" alignText="right">
                 AÇÂO
               </LabelText>
             </tr>

@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { Select } from '@rocketseat/unform';
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from 'react-datepicker';
+import pt from 'date-fns/locale/pt';
 
 export const Container = styled.div`
   margin: 0px auto;
@@ -41,10 +43,6 @@ export const Contain = styled.div`
   > div {
     margin: 10px 10px 10px 0;
     width: ${props => (props.large ? '1020px' : '240px')};
-
-    > div {
-      height: 44px;
-    }
   }
 `;
 
@@ -54,6 +52,7 @@ export const Header = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: 25px;
 
   strong {
     font-size: 24px;
@@ -61,5 +60,19 @@ export const Header = styled.div`
 
   aside {
     display: flex;
+  }
+`;
+
+export const Date = styled(DatePicker).attrs({
+  locale: pt,
+})`
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  height: 38px;
+  width: 240px;
+  margin-right: 36px;
+  padding-left: 10px;
+
+  div > input {
   }
 `;
