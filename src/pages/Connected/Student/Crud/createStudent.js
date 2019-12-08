@@ -42,10 +42,6 @@ export default function CreateStudent() {
     }
   }
 
-  function mask(e) {
-    console.log(e.target.value.length);
-  }
-
   return (
     <Container>
       <Form schema={schema} onSubmit={handleRegister}>
@@ -94,7 +90,7 @@ export default function CreateStudent() {
               <label htmlFor="weight">
                 PESO (<small>em kg</small>)
               </label>
-              <InputField onChange={e => mask(e)} size="small" name="weight" />
+              <InputField size="small" name="weight" />
             </Contain>
             <Contain>
               <label htmlFor="height">ALTURA</label>

@@ -47,7 +47,7 @@ export default function CreateStudent({ location }) {
     handleData();
   }, []);
 
-  async function handleRegister() {
+  async function handleUpdate() {
     // eslint-disable-next-line eqeqeq
     if (infoPrice.id == '' || infoStudent.id == '' || startDate == '') {
       toast.error('Complete todos os campos para cadastrar!');
@@ -82,7 +82,7 @@ export default function CreateStudent({ location }) {
 
   return (
     <Container>
-      <Form onSubmit={handleRegister}>
+      <Form onSubmit={handleUpdate}>
         <Header>
           <strong>Gerenciando matrículas</strong>
           <aside>

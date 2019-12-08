@@ -1,116 +1,110 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { MdArrowBack, MdCheck } from 'react-icons/md';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
+import { MdArrowBack, MdCheck } from 'react-icons/md';
 
-import api from '~/services/api';
+import { differenceInCalendarYears, parseISO } from 'date-fns';
+import { formatPrice } from '~/util/format';
+
 import history from '~/services/history';
+import api from '~/services/api';
 
 import InputField from '~/components/Input';
+import Button from '~/components/Button';
 
-import {
-  Container,
-  Content,
-  Header,
-  ButtonSafe,
-  ButtonBack,
-  Hr,
-  Contain,
-} from './styles';
+import { LabelText, Action } from '~/components/LabelText';
 
-export default function UpdateStudent({ location }) {
-  const userId = useSelector(state => state.user.profile.id);
-  const studentId = location.state.response.id;
+import { Container, Content, Header, Hr, Contain } from './styles';
 
-  const [loading, setLoading] = useState(false);
-
+export default function Plan({ location }) {
+  console.log(location.state.response);
   const schema = Yup.object().shape({
-    name: Yup.string().required('Nome obrigatório.'),
-    email: Yup.string()
-      .email('Insira um email válido.')
-      .required('Email obrigatório.'),
-    birth_date: Yup.string().required('Idade é obrigatória.'),
-    weight: Yup.string().required('Peso é obrigatório.'),
-    height: Yup.string().required('Altura é obrigatória.'),
+    title: Yup.string().required('Título do plano obrigatório.'),
+    duration: Yup.string().required('Duração do plano obrigatório.'),
+    price: Yup.string().required('Preço mensal obrigatório.'),
   });
-  async function handleUpdate({ name, email, birth_date, height, weight }) {
+
+  const [price, setPrice] = useState(location.state.response.price);
+  const [duration, setDuration] = useState(location.state.response.duration);
+  const [finalPrice, setFinalPrice] = useState(
+    location.state.response.duration * location.state.response.price
+  );
+
+  async function handleUpdate({ title, price, duration }) {
     try {
-      setLoading(true);
-      await api.put(`students/${studentId}`, {
-        name,
-        email,
-        birth_date,
-        height,
-        weight,
+      const response = await api.put(`plans/${location.state.response.id}`, {
+        title,
+        price,
+        duration,
       });
 
-      history.push('/student');
-      setLoading(false);
+      history.push('/plan');
     } catch (err) {
-      setLoading(false);
-      console.tron.log(err);
+      console.log(err);
     }
   }
+
+  const handlePrice = useMemo(() => {
+    console.log(price);
+    console.log(duration);
+    setFinalPrice(price * duration);
+  }, [price, duration]);
 
   return (
     <Container>
       <Form
-        initialData={location.state.response}
         schema={schema}
+        initialData={location.state.response}
         onSubmit={handleUpdate}
       >
-        <Contain>
-          <Header>
-            <strong>Editar aluno</strong>
-            <aside>
-              <ButtonBack
-                type="button"
-                onClick={() => history.push('/student')}
-              >
-                <MdArrowBack color="#fff" size={20} /> Voltar
-              </ButtonBack>
-              <ButtonSafe type="submit">
-                <MdCheck color="#fff" size={20} /> Salvar
-              </ButtonSafe>
-            </aside>
-          </Header>
-        </Contain>
+        <Header>
+          <strong>Gerenciando plano</strong>
+          <aside>
+            <Button
+              background="back"
+              type="button"
+              onClick={() => history.push('/student')}
+            >
+              <MdArrowBack color="#fff" size={20} /> Voltar
+            </Button>
+            <Button background="add" type="submit">
+              <MdCheck color="#fff" size={20} /> Salvar
+            </Button>
+          </aside>
+        </Header>
         <Content>
           <Hr>
             <Contain>
-              <label htmlFor="name">NOME COMPLETO</label>
-              <InputField
-                size="large"
-                name="name"
-                placeholder="Chester Bennington"
-              />
+              <label htmlFor="name">TÍTULO DO PLANO</label>
+              <InputField size="large" name="title" placeholder="Diamond" />
             </Contain>
           </Hr>
           <Hr>
             <Contain>
-              <label htmlFor="email">ENDEREÇO DE E-MAIL</label>
+              <label htmlFor="duration">DURAÇÃO EM MESES</label>
               <InputField
-                size="large"
-                name="email"
-                placeholder="example@email.com"
+                size="small"
+                name="duration"
+                type="number"
+                onChange={e => setDuration(e.target.value)}
               />
             </Contain>
-          </Hr>
-          <Hr>
             <Contain>
-              <label htmlFor="birth_date">IDADE</label>
-              <InputField size="small" name="birth_date" type="date" />
+              <label htmlFor="price">PREÇO MENSAL</label>
+              <InputField
+                size="small"
+                name="price"
+                onChange={e => setPrice(e.target.value)}
+              />
             </Contain>
             <Contain>
-              <label htmlFor="weight">
-                PESO (<small>em kg</small>)
-              </label>
-              <InputField size="small" name="weight" />
-            </Contain>
-            <Contain>
-              <label htmlFor="height">ALTURA</label>
-              <InputField size="small" name="height" />
+              <label htmlFor="final_price">PREÇO TOTAL</label>
+              <InputField
+                readOnly
+                size="small"
+                value={formatPrice(finalPrice)}
+                name="final_price"
+              />
             </Contain>
           </Hr>
         </Content>

@@ -13,6 +13,10 @@ import Enrollment from '../pages/Connected/Enrollment';
 import CreateEnrollment from '../pages/Connected/Enrollment/Crud/createEnrollment';
 import UpdateEnrollment from '../pages/Connected/Enrollment/Crud/updateEnrollment';
 
+import Plan from '../pages/Connected/Plan';
+import CreatePlan from '../pages/Connected/Plan/Crud/createPlan';
+import UpdatePlan from '../pages/Connected/Plan/Crud/updatePlan';
+
 export default function routes() {
   return (
     <Switch>
@@ -35,6 +39,10 @@ export default function routes() {
         component={UpdateEnrollment}
         isPrivate
       />
+
+      <Route path="/plan" component={Plan} isPrivate />
+      <Route path="/createPlan" exact component={CreatePlan} isPrivate />
+      <Route path="/updatePlan" exact component={UpdatePlan} isPrivate />
     </Switch>
   );
 }
