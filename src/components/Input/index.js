@@ -2,6 +2,9 @@ import styled, { css } from 'styled-components';
 import { Input } from '@rocketseat/unform';
 
 const sizes = {
+  short: css`
+    width: 252px;
+  `,
   small: css`
     width: 340px;
   `,

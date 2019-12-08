@@ -8,19 +8,11 @@ import api from '~/services/api';
 import history from '~/services/history';
 
 import InputField from '~/components/Input';
+import Button from '~/components/Button';
 
-import {
-  Container,
-  Content,
-  Header,
-  ButtonSafe,
-  ButtonBack,
-  Hr,
-  Contain,
-} from './styles';
+import { Container, Content, Header, Hr, Contain } from './styles';
 
 export default function CreateStudent() {
-  const userId = useSelector(state => state.user.profile.id);
   const [loading, setLoading] = useState(false);
 
   const schema = Yup.object().shape({
@@ -51,22 +43,27 @@ export default function CreateStudent() {
     }
   }
 
+  function mask(e) {
+    console.log(e.target.value.length);
+  }
+
   return (
     <Container>
       <Form schema={schema} onSubmit={handleRegister}>
         <Contain>
-          <Header>
+          <Header active="student">
             <strong>Gerenciando alunos</strong>
             <aside>
-              <ButtonBack
+              <Button
+                background="back"
                 type="button"
                 onClick={() => history.push('/student')}
               >
                 <MdArrowBack color="#fff" size={20} /> Voltar
-              </ButtonBack>
-              <ButtonSafe type="submit">
+              </Button>
+              <Button background="add" type="submit">
                 <MdCheck color="#fff" size={20} /> Cadastrar
-              </ButtonSafe>
+              </Button>
             </aside>
           </Header>
         </Contain>
@@ -93,14 +90,19 @@ export default function CreateStudent() {
           </Hr>
           <Hr>
             <Contain>
-              <label htmlFor="birth_date">IDADE</label>
+              <label htmlFor="birth_date">DATA DE NASCIMENTO</label>
               <InputField size="small" name="birth_date" type="date" />
             </Contain>
             <Contain>
               <label htmlFor="weight">
                 PESO (<small>em kg</small>)
               </label>
-              <InputField size="small" name="weight" />
+              <InputField
+                onChange={e => mask(e)}
+                value={maskWeight}
+                size="small"
+                name="weight"
+              />
             </Contain>
             <Contain>
               <label htmlFor="height">ALTURA</label>

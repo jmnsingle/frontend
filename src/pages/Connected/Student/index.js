@@ -1,25 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
 import { differenceInCalendarYears, parseISO } from 'date-fns';
-import history from '~/services/history';
 
+import history from '~/services/history';
 import api from '~/services/api';
 
-import {
-  Container,
-  Content,
-  TableHeader,
-  ButtonEdit,
-  ButtonDelete,
-  Name,
-  Email,
-  Idade,
-  TitleName,
-  TitleEmail,
-  TitleIdade,
-  TitleAction,
-  Action,
-} from './styles';
+import Button from '~/components/Button';
+import { LabelText, Action } from '~/components/LabelText';
+
+import { Container, Content, TableHeader } from '~/pages/Connected/styles';
 
 export default function Student() {
   const [students, setStudents] = useState([]);
@@ -59,9 +48,12 @@ export default function Student() {
       <TableHeader>
         <strong>Gerenciando alunos</strong>
         <aside>
-          <button onClick={() => history.push('/createStudent')}>
-            <MdAdd color="#fff" size={25} /> Cadastrar{' '}
-          </button>
+          <Button
+            background="add"
+            onClick={() => history.push('/createStudent')}
+          >
+            <MdAdd color="#fff" size={25} /> Cadastrar
+          </Button>
           <input type="text" placeholder="Buscar aluno" />
         </aside>
       </TableHeader>
@@ -69,29 +61,37 @@ export default function Student() {
         <table>
           <thead>
             <tr>
-              <TitleName>NOME</TitleName>
-              <TitleEmail>EMAIL</TitleEmail>
-              <TitleIdade>IDADE</TitleIdade>
-              <TitleAction>AÇÂO</TitleAction>
+              <LabelText title alignText="left">
+                NOME
+              </LabelText>
+              <LabelText title>EMAIL</LabelText>
+              <LabelText title>IDADE</LabelText>
+              <LabelText title alignText="right">
+                AÇÂO
+              </LabelText>
             </tr>
           </thead>
           <tbody>
             {students.map(item => (
               <tr key={item.id}>
-                <Name>{item.name}</Name>
-                <Email>{item.email}</Email>
-                <Idade>{item.idade} anos</Idade>
+                <LabelText alignText="left">{item.name}</LabelText>
+                <LabelText>{item.email}</LabelText>
+                <LabelText>{item.idade} anos</LabelText>
                 <Action>
-                  <ButtonEdit
+                  <Button
+                    background="edit"
                     onClick={() =>
                       history.push('/updateStudent', { response: item })
                     }
                   >
-                    editar
-                  </ButtonEdit>
-                  <ButtonDelete onClick={() => handleDelete(item.id)}>
-                    apagar
-                  </ButtonDelete>
+                    <MdEdit color="#fff" size={25} />
+                  </Button>
+                  <Button
+                    background="danger"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    <MdDelete color="#fff" size={25} />
+                  </Button>
                 </Action>
               </tr>
             ))}
