@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, Content } from './styles';
@@ -20,11 +20,21 @@ export default function Header() {
     <Container>
       <Content>
         <nav>
-          <img src={logo} alt="Gympoint" />
-          <Link to="/student">Alunos</Link>
-          <Link to="/plan">Planos</Link>
-          <Link to="/enrollment">Matrículas</Link>
-          <Link to="/help">Pedidos de auxílio</Link>
+          <Link to="/student">
+            <img src={logo} alt="Gympoint" />
+          </Link>
+          <NavLink activeClassName="selected" to="/student">
+            Alunos
+          </NavLink>
+          <NavLink activeClassName="selected" to="/plan">
+            Planos
+          </NavLink>
+          <NavLink activeClassName="selected" to="/enrollment">
+            Matrículas
+          </NavLink>
+          <NavLink activeClassName="selected" to="/help">
+            Pedidos de auxílio
+          </NavLink>
         </nav>
         <aside>
           <strong>{profile.name}</strong>

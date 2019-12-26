@@ -50,7 +50,7 @@ export default function Student() {
         <aside>
           <Button
             background="add"
-            onClick={() => history.push('/createStudent')}
+            onClick={() => history.push('/student/create')}
           >
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
@@ -80,9 +80,7 @@ export default function Student() {
                 <Action>
                   <Button
                     background="edit"
-                    onClick={() =>
-                      history.push('/updateStudent', { response: item })
-                    }
+                    onClick={() => history.push(`/student/edit/${item.id}`)}
                   >
                     <MdEdit color="#fff" size={25} />
                   </Button>

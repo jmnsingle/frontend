@@ -31,6 +31,10 @@ export const Content = styled.div`
     a:hover {
       color: #000;
     }
+
+    .selected {
+      color: #000;
+    }
   }
 
   aside {

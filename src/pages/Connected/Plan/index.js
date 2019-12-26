@@ -36,10 +36,7 @@ export default function Plan() {
       <TableHeader>
         <strong>Gerenciando planos</strong>
         <aside>
-          <Button
-            background="add"
-            onClick={() => history.push('/createStudent')}
-          >
+          <Button background="add" onClick={() => history.push('/plan/create')}>
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
           <input type="text" placeholder="Buscar aluno" />
@@ -49,12 +46,12 @@ export default function Plan() {
         <table>
           <thead>
             <tr>
-              <LabelText title alignText="left">
+              <LabelText title="true" alignText="left">
                 TÍTULO
               </LabelText>
-              <LabelText title>DURAÇÃO</LabelText>
-              <LabelText title>VALOR P/ MÊS</LabelText>
-              <LabelText title alignText="right">
+              <LabelText title="true">DURAÇÃO</LabelText>
+              <LabelText title="true">VALOR P/ MÊS</LabelText>
+              <LabelText title="true" alignText="right">
                 AÇÂO
               </LabelText>
             </tr>
@@ -73,9 +70,7 @@ export default function Plan() {
                 <Action>
                   <Button
                     background="edit"
-                    onClick={() =>
-                      history.push('/updatePlan', { response: item })
-                    }
+                    onClick={() => history.push(`plan/edit/${item.id}`)}
                   >
                     <MdEdit color="#fff" size={25} />
                   </Button>

@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 
-import { differenceInCalendarYears, parseISO } from 'date-fns';
 import { formatPrice } from '~/util/format';
 
 import history from '~/services/history';
@@ -12,58 +12,83 @@ import api from '~/services/api';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
-import { LabelText, Action } from '~/components/LabelText';
-
 import { Container, Content, Header, Hr, Contain } from './styles';
 
-export default function Plan({ location }) {
-  console.log(location.state.response);
+export default function FormPlan({ match }) {
   const schema = Yup.object().shape({
     title: Yup.string().required('Título do plano obrigatório.'),
     duration: Yup.string().required('Duração do plano obrigatório.'),
     price: Yup.string().required('Preço mensal obrigatório.'),
   });
+  const { id } = match.params;
+  const [loading, setLoading] = useState(false);
+  const [finalPrice, setFinalPrice] = useState(0);
 
-  const [price, setPrice] = useState(location.state.response.price);
-  const [duration, setDuration] = useState(location.state.response.duration);
-  const [finalPrice, setFinalPrice] = useState(
-    location.state.response.duration * location.state.response.price
-  );
-
-  async function handleUpdate({ title, price, duration }) {
+  const [plan, setPlan] = useState({
+    title: '',
+    price: null,
+    duration: null,
+  });
+  async function handleSubmit({ title, price, duration }) {
     try {
-      const response = await api.put(`plans/${location.state.response.id}`, {
-        title,
-        price,
-        duration,
-      });
-
+      setLoading(true);
+      // eslint-disable-next-line no-unused-vars
+      const response = id
+        ? await api.put(`plans/${id}`, {
+            title,
+            price,
+            duration,
+          })
+        : await api.post('plans', {
+            title,
+            price,
+            duration,
+          });
       history.push('/plan');
+      setLoading(false);
+      toast.success(`Plan ${id ? 'editado' : 'cadastrado'} com sucesso !`);
     } catch (err) {
-      console.log(err);
+      toast.error(`Falha  ${id ? 'na edição' : 'no cadastro'} do plano.`);
     }
   }
 
-  const handlePrice = useMemo(() => {
-    console.log(price);
-    console.log(duration);
-    setFinalPrice(price * duration);
-  }, [price, duration]);
+  useEffect(() => {
+    try {
+      setLoading(true);
+      // eslint-disable-next-line no-inner-declarations
+      async function loadPlan() {
+        const { data } = await api.get(`plans/${id}`);
+
+        setPlan(data);
+      }
+      if (id) {
+        loadPlan();
+      }
+    } catch (err) {
+      toast.error('Falha no carregamento do plano.');
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const total = formatPrice(
+      plan.duration === null || plan.price === null
+        ? 0
+        : plan.duration * plan.price
+    );
+    setFinalPrice(total);
+  }, [plan]);
 
   return (
     <Container>
-      <Form
-        schema={schema}
-        initialData={location.state.response}
-        onSubmit={handleUpdate}
-      >
+      <Form schema={schema} initialData={plan} onSubmit={handleSubmit}>
         <Header>
           <strong>Gerenciando plano</strong>
           <aside>
             <Button
               background="back"
               type="button"
-              onClick={() => history.push('/student')}
+              onClick={() => history.push('/plan')}
             >
               <MdArrowBack color="#fff" size={20} /> Voltar
             </Button>
@@ -86,7 +111,7 @@ export default function Plan({ location }) {
                 size="small"
                 name="duration"
                 type="number"
-                onChange={e => setDuration(e.target.value)}
+                onChange={e => setPlan({ ...plan, duration: e.target.value })}
               />
             </Contain>
             <Contain>
@@ -94,7 +119,7 @@ export default function Plan({ location }) {
               <InputField
                 size="small"
                 name="price"
-                onChange={e => setPrice(e.target.value)}
+                onChange={e => setPlan({ ...plan, price: e.target.value })}
               />
             </Contain>
             <Contain>
@@ -102,8 +127,8 @@ export default function Plan({ location }) {
               <InputField
                 readOnly
                 size="small"
-                value={formatPrice(finalPrice)}
                 name="final_price"
+                value={finalPrice}
               />
             </Contain>
           </Hr>

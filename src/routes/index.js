@@ -6,43 +6,40 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 
 import Student from '../pages/Connected/Student';
-import CreateStudent from '../pages/Connected/Student/Crud/createStudent';
-import UpdateStudent from '../pages/Connected/Student/Crud/updateStudent';
+import FormStudent from '../pages/Connected/Student/Form/form';
 
 import Enrollment from '../pages/Connected/Enrollment';
-import CreateEnrollment from '../pages/Connected/Enrollment/Crud/createEnrollment';
-import UpdateEnrollment from '../pages/Connected/Enrollment/Crud/updateEnrollment';
+import FormEnrollment from '../pages/Connected/Enrollment/Form/form';
 
 import Plan from '../pages/Connected/Plan';
-import CreatePlan from '../pages/Connected/Plan/Crud/createPlan';
-import UpdatePlan from '../pages/Connected/Plan/Crud/updatePlan';
+import FormPlan from '../pages/Connected/Plan/Form/form';
 
 export default function routes() {
   return (
     <Switch>
       <Route path="/" exact component={SignIn} />
 
-      <Route path="/student" component={Student} isPrivate />
-      <Route path="/createStudent" exact component={CreateStudent} isPrivate />
-      <Route path="/updateStudent" exact component={UpdateStudent} isPrivate />
+      <Route path="/student" exact component={Student} isPrivate />
+      <Route path="/student/create" exact component={FormStudent} isPrivate />
+      <Route path="/student/edit/:id" exact component={FormStudent} isPrivate />
 
-      <Route path="/enrollment" component={Enrollment} isPrivate />
+      <Route path="/enrollment" exact component={Enrollment} isPrivate />
       <Route
-        path="/createEnrollment"
+        path="/enrollment/create"
         exact
-        component={CreateEnrollment}
+        component={FormEnrollment}
         isPrivate
       />
       <Route
-        path="/updateEnrollment"
+        path="/enrollment/edit/:id"
         exact
-        component={UpdateEnrollment}
+        component={FormEnrollment}
         isPrivate
       />
 
-      <Route path="/plan" component={Plan} isPrivate />
-      <Route path="/createPlan" exact component={CreatePlan} isPrivate />
-      <Route path="/updatePlan" exact component={UpdatePlan} isPrivate />
+      <Route path="/plan" exact component={Plan} isPrivate />
+      <Route path="/plan/create" exact component={FormPlan} isPrivate />
+      <Route path="/plan/edit/:id" exact component={FormPlan} isPrivate />
     </Switch>
   );
 }

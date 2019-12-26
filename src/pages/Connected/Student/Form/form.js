@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -12,57 +12,90 @@ import Button from '~/components/Button';
 
 import { Container, Content, Header, Hr, Contain } from './styles';
 
-export default function CreateStudent() {
+export default function FormStudent({ match }) {
+  const { id } = match.params;
   const [loading, setLoading] = useState(false);
+  const [student, setStudent] = useState({
+    name: '',
+    email: '',
+    birth_date: null,
+    height: null,
+    weight: null,
+  });
+
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line no-inner-declarations
+      async function loadStudent() {
+        const { data } = await api.get(`students/${id}`);
+        setStudent(data);
+      }
+      if (id) {
+        loadStudent();
+      }
+    } catch (err) {
+      toast.error('Falha ao buscar dados do estudante.');
+      history.push('/student');
+    }
+  }, []);
 
   const schema = Yup.object().shape({
     name: Yup.string().required('Nome obrigatório.'),
     email: Yup.string()
       .email('Insira um email válido.')
       .required('Email obrigatório.'),
-    birth_date: Yup.string().required('Idade é obrigatória.'),
+    birth_date: Yup.string().required('Data de nascimento é obrigatória.'),
     weight: Yup.string().required('Peso é obrigatório.'),
     height: Yup.string().required('Altura é obrigatória.'),
   });
+
   async function handleRegister({ name, email, birth_date, height, weight }) {
     try {
       setLoading(true);
-      await api.post(`students`, {
-        name,
-        email,
-        birth_date,
-        height,
-        weight,
-      });
+      // eslint-disable-next-line no-unused-vars
+      const response = id
+        ? await api.put(`students/${id}`, {
+            name,
+            email,
+            birth_date,
+            height,
+            weight,
+          })
+        : await api.post(`students`, {
+            name,
+            email,
+            birth_date,
+            height,
+            weight,
+          });
 
       history.push('/student');
       setLoading(false);
+      toast.success(`Estudante ${id ? 'editado' : 'cadastrado'} com sucesso !`);
     } catch (err) {
       setLoading(false);
-      console.tron.log(err);
+      toast.error(`Falha ao ${id ? 'editar' : 'cadastrar'} estudante.`);
     }
   }
 
   return (
     <Container>
-      <Form schema={schema} onSubmit={handleRegister}>
-        <Contain>
-          <Header active="student">
-            <strong>Gerenciando alunos</strong>
-            <aside>
-              <Button
-                background="back"
-                type="button"
-                onClick={() => history.push('/student')}
-              >
-                <MdArrowBack color="#fff" size={20} /> Voltar
-              </Button>
-              <Button background="add" type="submit">
-                <MdCheck color="#fff" size={20} /> Cadastrar
-              </Button>
-            </aside>
-          </Header>
-        </Contain>
+      <Form schema={schema} onSubmit={handleRegister} initialData={student}>
+        <Header active="student">
+          <strong>Gerenciando alunos</strong>
+          <aside>
+            <Button
+              background="back"
+              type="button"
+              onClick={() => history.push('/student')}
+            >
+              <MdArrowBack color="#fff" size={20} /> Voltar
+            </Button>
+            <Button background="add" type="submit">
+              <MdCheck color="#fff" size={20} /> {id ? 'Editar' : 'Cadastrar'}
+            </Button>
+          </aside>
+        </Header>
         <Content>
           <Hr>
             <Contain>
