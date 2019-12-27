@@ -8,7 +8,7 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
-import { Container, Content, TableHeader } from '~/pages/Connected/styles';
+import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Enrollment() {
   const [enrollments, setEnrollments] = useState([]);
@@ -56,7 +56,7 @@ export default function Enrollment() {
         <aside>
           <Button
             background="add"
-            onClick={() => history.push('/createEnrollment')}
+            onClick={() => history.push('/enrollment/create')}
           >
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
@@ -90,9 +90,7 @@ export default function Enrollment() {
                 <Action>
                   <Button
                     background="edit"
-                    onClick={() =>
-                      history.push('/updateEnrollment', { response: item })
-                    }
+                    onClick={() => history.push(`/enrollment/edit/${item.id}`)}
                   >
                     <MdEdit color="#fff" size={25} />
                   </Button>

@@ -19,7 +19,15 @@ export const Content = styled.div`
   table {
     border-spacing: 0;
     width: 100%;
-    padding: 4px;
+    margin: 20px;
+
+    tbody {
+      height: 100px;
+
+      tr:hover {
+        background: #f2f2f2;
+      }
+    }
   }
 `;
 

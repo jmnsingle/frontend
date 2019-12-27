@@ -8,7 +8,7 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
-import { Container, Content, TableHeader } from '~/pages/Connected/styles';
+import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Student() {
   const [students, setStudents] = useState([]);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import NumberFormat from 'react-number-format';
 import { toast } from 'react-toastify';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
@@ -10,7 +11,7 @@ import history from '~/services/history';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
-import { Container, Content, Header, Hr, Contain } from './styles';
+import { Container, Content, Header, Hr, Contain } from '../../stylesForm';
 
 export default function FormStudent({ match }) {
   const { id } = match.params;
@@ -126,11 +127,23 @@ export default function FormStudent({ match }) {
               <label htmlFor="weight">
                 PESO (<small>em kg</small>)
               </label>
-              <InputField size="small" name="weight" />
+              <InputField
+                min="0"
+                step="0.01"
+                type="number"
+                size="small"
+                name="weight"
+              />
             </Contain>
             <Contain>
               <label htmlFor="height">ALTURA</label>
-              <InputField size="small" name="height" />
+              <InputField
+                min="0"
+                step="0.01"
+                type="number"
+                size="small"
+                name="height"
+              />
             </Contain>
           </Hr>
         </Content>

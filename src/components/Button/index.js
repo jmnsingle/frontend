@@ -33,6 +33,7 @@ export const ButtonField = styled.button`
 
   display: flex;
   align-items: center;
+  justify-content: center;
 
   ${props => backgrounds[props.background]}
 `;

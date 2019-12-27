@@ -12,7 +12,7 @@ import api from '~/services/api';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
-import { Container, Content, Header, Hr, Contain } from './styles';
+import { Container, Content, Header, Hr, Contain } from '../../stylesForm';
 
 export default function FormPlan({ match }) {
   const schema = Yup.object().shape({
@@ -46,24 +46,31 @@ export default function FormPlan({ match }) {
           });
       history.push('/plan');
       setLoading(false);
-      toast.success(`Plan ${id ? 'editado' : 'cadastrado'} com sucesso !`);
+      toast.success(`Plano ${id ? 'editado' : 'cadastrado'} com sucesso !`);
     } catch (err) {
+      setLoading(false);
       toast.error(`Falha  ${id ? 'na edição' : 'no cadastro'} do plano.`);
     }
   }
 
   useEffect(() => {
     try {
+      const abortController = new AbortController();
       setLoading(true);
       // eslint-disable-next-line no-inner-declarations
       async function loadPlan() {
         const { data } = await api.get(`plans/${id}`);
 
         setPlan(data);
+        setLoading(false);
       }
+
       if (id) {
         loadPlan();
       }
+      return () => {
+        abortController.abort();
+      };
     } catch (err) {
       toast.error('Falha no carregamento do plano.');
       setLoading(false);
@@ -93,7 +100,7 @@ export default function FormPlan({ match }) {
               <MdArrowBack color="#fff" size={20} /> Voltar
             </Button>
             <Button background="add" type="submit">
-              <MdCheck color="#fff" size={20} /> Salvar
+              <MdCheck color="#fff" size={20} /> {id ? 'Editar' : 'Cadastrar'}
             </Button>
           </aside>
         </Header>

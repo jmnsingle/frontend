@@ -6,11 +6,12 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-top: 25px;
 `;
 
 export const Content = styled.div`
+  margin-top: 25px;
   background: #fff;
-  margin-top: 20px;
   border-radius: 4px;
   padding: 20px;
   form {
@@ -37,6 +38,10 @@ export const Hr = styled.div`
 export const Contain = styled.div`
   display: flex;
   flex-direction: column;
+  > div {
+    margin: 10px 10px 10px 0;
+    width: ${props => (props.large ? '1020px' : '240px')};
+  }
 `;
 
 export const Header = styled.div`

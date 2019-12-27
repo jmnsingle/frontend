@@ -6,7 +6,7 @@ const alignTexts = {
   `,
   right: css`
     text-align: right;
-    padding-right: 25px;
+    padding-right: 11px;
   `,
 };
 

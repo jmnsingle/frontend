@@ -6,13 +6,15 @@ import Route from './Route';
 import SignIn from '../pages/SignIn';
 
 import Student from '../pages/Connected/Student';
-import FormStudent from '../pages/Connected/Student/Form/form';
+import FormStudent from '../pages/Connected/Student/Form';
 
 import Enrollment from '../pages/Connected/Enrollment';
-import FormEnrollment from '../pages/Connected/Enrollment/Form/form';
+import FormEnrollment from '../pages/Connected/Enrollment/Form';
 
 import Plan from '../pages/Connected/Plan';
-import FormPlan from '../pages/Connected/Plan/Form/form';
+import FormPlan from '../pages/Connected/Plan/Form';
+
+import HelpOrder from '../pages/Connected/HelpOrder';
 
 export default function routes() {
   return (
@@ -40,6 +42,8 @@ export default function routes() {
       <Route path="/plan" exact component={Plan} isPrivate />
       <Route path="/plan/create" exact component={FormPlan} isPrivate />
       <Route path="/plan/edit/:id" exact component={FormPlan} isPrivate />
+
+      <Route path="/help" exact component={HelpOrder} isPrivate />
     </Switch>
   );
 }
