@@ -6,11 +6,14 @@ import {
   MdArrowBack,
   MdArrowForward,
 } from 'react-icons/md';
+import Swal from 'sweetalert2';
+import { toast } from 'react-toastify';
 import { formatPrice } from '~/util/format';
 
 import history from '~/services/history';
 import api from '~/services/api';
 import Loading from '~/components/Loading';
+import Empty from '~/components/Empty';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
@@ -43,19 +46,20 @@ export default function Plan() {
   }
   useEffect(() => {
     loadPlans();
-    if (page === 1 && plans.length < 5) {
+    if (page === 1 && plans.length < 10) {
       setNext(false);
       setBefore(false);
-    } else if (page === 1 && plans.length >= 5) {
+    } else if (page === 1 && plans.length >= 10) {
       setNext(true);
       setBefore(false);
-    } else if (page > 1 && plans.length < 5) {
+    } else if (page > 1 && plans.length < 10) {
       setNext(false);
       setBefore(true);
     } else {
       setNext(true);
       setBefore(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, plans.length]);
 
   function handlePagination(op) {
@@ -68,18 +72,43 @@ export default function Plan() {
     } else {
       setPage(1);
     }
-    console.log('page ', page);
   }
 
-  async function handleDelete(id) {
-    try {
-      setLoading(true);
-      await api.delete(`plans/${id}`);
-      loadPlans();
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-    }
+  async function handleDelete(item) {
+    Swal.fire({
+      title: 'Quer mesmo deletar ?',
+      text: 'Você não poderá desfazer essa ação!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Não, manter.',
+      confirmButtonColor: '#0071c7',
+      cancelButtonColor: '#eb4034',
+    }).then(async result => {
+      if (result.value) {
+        try {
+          await api.delete(`plans/${item.id}`);
+          Swal.fire({
+            title: 'Deletado!',
+            html: `${item.title} saiu lista de cadastros.`,
+            type: 'success',
+            timer: 3000,
+          });
+          loadPlans();
+        } catch (err) {
+          console.log(err.response.data);
+          setLoading(false);
+          toast.error('Falha ao deletar matrícula.');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          html: `${item.title} permanece na lista de cadastrados.`,
+          type: 'error',
+          timer: 3000,
+        });
+      }
+    });
   }
 
   function search(text) {
@@ -109,6 +138,7 @@ export default function Plan() {
       </TableHeader>
       <Content>
         {loading && <Loading />}
+        {plans.length === 0 && !loading && <Empty />}
         <table>
           <thead>
             <tr>
@@ -142,7 +172,7 @@ export default function Plan() {
                   </Button>
                   <Button
                     background="danger"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item)}
                   >
                     <MdDelete color="#fff" size={25} />
                   </Button>
@@ -156,7 +186,7 @@ export default function Plan() {
         <Button
           disabled={!before}
           onClick={() => handlePagination(0)}
-          background={before ? 'add' : 'back'}
+          background={before ? 'pagination' : 'back'}
           type="button"
         >
           <MdArrowBack color="#fff" size={20} />
@@ -166,7 +196,7 @@ export default function Plan() {
         <Button
           disabled={!next}
           onClick={() => handlePagination(1)}
-          background={next ? 'add' : 'back'}
+          background={next ? 'pagination' : 'back'}
           type="button"
         >
           Próximo

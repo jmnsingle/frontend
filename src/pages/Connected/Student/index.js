@@ -7,12 +7,15 @@ import {
   MdArrowForward,
 } from 'react-icons/md';
 import { differenceInCalendarYears, parseISO } from 'date-fns';
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 
 import history from '~/services/history';
 import api from '~/services/api';
 
 import Button from '~/components/Button';
 import Loading from '~/components/Loading';
+import Empty from '~/components/Empty';
 import { LabelText, Action } from '~/components/LabelText';
 
 import {
@@ -70,23 +73,20 @@ export default function Student() {
   }
   useEffect(() => {
     loadStudents();
-    if (page === 1 && students.length < 5) {
+    if (page === 1 && students.length < 10) {
       setNext(false);
       setBefore(false);
-      console.log('1');
-    } else if (page === 1 && students.length >= 5) {
+    } else if (page === 1 && students.length >= 10) {
       setNext(true);
       setBefore(false);
-      console.log('2');
-    } else if (page > 1 && students.length < 5) {
-      console.log('3');
+    } else if (page > 1 && students.length < 10) {
       setNext(false);
       setBefore(true);
     } else {
-      console.log('4');
       setNext(true);
       setBefore(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, students.length]);
 
   function handlePagination(op) {
@@ -101,13 +101,40 @@ export default function Student() {
     }
   }
 
-  async function handleDelete(id) {
-    try {
-      await api.delete(`students/${id}`);
-      loadStudents();
-    } catch (err) {
-      console.tron.log(err);
-    }
+  function handleDelete(item) {
+    Swal.fire({
+      title: 'Quer mesmo deletar ?',
+      text: 'Você não poderá desfazer essa ação!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Não, manter.',
+      confirmButtonColor: '#0071c7',
+      cancelButtonColor: '#eb4034',
+    }).then(async result => {
+      if (result.value) {
+        try {
+          await api.delete(`students/${item.id}`);
+          Swal.fire({
+            title: 'Deletado!',
+            html: `${item.name} saiu lista de cadastros.`,
+            type: 'success',
+            timer: 3000,
+          });
+          loadStudents();
+        } catch (err) {
+          setLoading(false);
+          toast.error('Falha ao deletar matrícula.');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          html: `${item.name} permanece na lista de cadastros.`,
+          type: 'error',
+          timer: 3000,
+        });
+      }
+    });
   }
 
   function search(text) {
@@ -141,6 +168,7 @@ export default function Student() {
       </TableHeader>
       <Content>
         {loading && <Loading />}
+        {students.length === 0 && !loading && <Empty />}
 
         <table>
           <thead>
@@ -170,7 +198,7 @@ export default function Student() {
                   </Button>
                   <Button
                     background="danger"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item)}
                   >
                     <MdDelete color="#fff" size={25} />
                   </Button>
@@ -184,7 +212,7 @@ export default function Student() {
         <Button
           disabled={!before}
           onClick={() => handlePagination(0)}
-          background={before ? 'add' : 'back'}
+          background={before ? 'pagination' : 'back'}
           type="button"
         >
           <MdArrowBack color="#fff" size={20} />
@@ -194,7 +222,7 @@ export default function Student() {
         <Button
           disabled={!next}
           onClick={() => handlePagination(1)}
-          background={next ? 'add' : 'back'}
+          background={next ? 'pagination' : 'back'}
           type="button"
         >
           Próximo

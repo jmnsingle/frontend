@@ -124,6 +124,7 @@ export default function FormEnrollment({ match }) {
         ),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enrollment.start_date, enrollment.price]);
 
   return (

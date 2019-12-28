@@ -8,6 +8,7 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 import Loading from '~/components/Loading';
+import Empty from '~/components/Empty';
 import {
   Container,
   Content,
@@ -53,6 +54,7 @@ export default function HelpOrder() {
       setNext(true);
       setBefore(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, helpOrders.length]);
 
   function handlePagination(op) {
@@ -138,6 +140,7 @@ export default function HelpOrder() {
         </aside>
       </TableHeader>
       {loading && <Loading />}
+      {helpOrders.length === 0 && !loading && <Empty />}
       <Content>
         <table>
           <thead>
@@ -177,7 +180,7 @@ export default function HelpOrder() {
         <Button
           disabled={!before}
           onClick={() => handlePagination(0)}
-          background={before ? 'add' : 'back'}
+          background={before ? 'pagination' : 'back'}
           type="button"
         >
           <MdArrowBack color="#fff" size={20} />
@@ -187,7 +190,7 @@ export default function HelpOrder() {
         <Button
           disabled={!next}
           onClick={() => handlePagination(1)}
-          background={next ? 'add' : 'back'}
+          background={next ? 'pagination' : 'back'}
           type="button"
         >
           Próximo

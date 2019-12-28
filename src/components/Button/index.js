@@ -13,8 +13,8 @@ const backgrounds = {
   edit: css`
     background: #059efc;
   `,
-  active: css`
-    background: ${props => (props.on ? '#05f705' : '#b6bab7')};
+  pagination: css`
+    background: #0071c7;
   `,
 };
 
@@ -25,9 +25,7 @@ export const ButtonField = styled.button`
   margin: 2px 0 2px 10px;
   height: 30px;
   width: ${props =>
-    props.background === 'danger' ||
-    props.background === 'edit' ||
-    props.background === 'active'
+    props.background === 'danger' || props.background === 'edit'
       ? '30px'
       : '100px'};
 

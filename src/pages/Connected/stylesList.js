@@ -12,7 +12,8 @@ export const Content = styled.div`
   background: #fff;
   width: 100%;
   height: 400px;
-  border-radius: 4px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   margin-top: 0px;
 
   display: flex;
@@ -70,7 +71,7 @@ export const Pagination = styled.div`
   border-bottom-right-radius: 4px;
   width: 100%;
   height: 40px;
-  padding-right: 10px;
+  padding: 0 18px 0 10px;
 
   display: flex;
   flex-direction: row;

@@ -10,10 +10,12 @@ import {
 import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
+import Swal from 'sweetalert2';
 
 import history from '~/services/history';
 import api from '~/services/api';
 import Loading from '~/components/Loading';
+import Empty from '~/components/Empty';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
@@ -98,6 +100,7 @@ export default function Enrollment() {
       setNext(true);
       setBefore(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, enrollments.length]);
 
   function handlePagination(op) {
@@ -112,17 +115,40 @@ export default function Enrollment() {
     }
   }
 
-  async function handleDelete(id) {
-    try {
-      setLoading(true);
-      await api.delete(`enrollments/${id}`);
-      loadEnrollments();
-      setLoading(false);
-      toast.success('Matrícula deletada com sucesso !');
-    } catch (err) {
-      setLoading(false);
-      toast.error('Falha ao deletar matrícula.');
-    }
+  async function handleDelete(item) {
+    Swal.fire({
+      title: 'Quer mesmo deletar ?',
+      text: 'Você não poderá desfazer essa ação!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, deletar!',
+      cancelButtonText: 'Não, manter.',
+      confirmButtonColor: '#0071c7',
+      cancelButtonColor: '#eb4034',
+    }).then(async result => {
+      if (result.value) {
+        try {
+          await api.delete(`enrollments/${item.id}`);
+          Swal.fire({
+            title: 'Deletado!',
+            html: `${item.student.name} saiu lista de cadastros.`,
+            type: 'success',
+            timer: 3000,
+          });
+          loadEnrollments();
+        } catch (err) {
+          setLoading(false);
+          toast.error('Falha ao deletar matrícula.');
+        }
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          html: `${item.student.name} permanece na lista de cadastros.`,
+          type: 'error',
+          timer: 3000,
+        });
+      }
+    });
   }
 
   function search(text) {
@@ -151,11 +177,12 @@ export default function Enrollment() {
           <input
             onChange={e => search(e.target.value)}
             type="text"
-            placeholder="Buscar aluno"
+            placeholder="Buscar por aluno"
           />
         </aside>
       </TableHeader>
       {loading && <Loading />}
+      {enrollments.length === 0 && !loading && <Empty />}
       <Content>
         <table>
           <thead>
@@ -194,7 +221,7 @@ export default function Enrollment() {
                   </Button>
                   <Button
                     background="danger"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => handleDelete(item)}
                   >
                     <MdDelete color="#fff" size={25} />
                   </Button>
@@ -208,7 +235,7 @@ export default function Enrollment() {
         <Button
           disabled={!before}
           onClick={() => handlePagination(0)}
-          background={before ? 'add' : 'back'}
+          background={before ? 'pagination' : 'back'}
           type="button"
         >
           <MdArrowBack color="#fff" size={20} />
@@ -218,7 +245,7 @@ export default function Enrollment() {
         <Button
           disabled={!next}
           onClick={() => handlePagination(1)}
-          background={next ? 'add' : 'back'}
+          background={next ? 'pagination' : 'back'}
           type="button"
         >
           Próximo
