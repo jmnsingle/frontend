@@ -13,13 +13,15 @@ import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Plan() {
   const [plans, setPlans] = useState([]);
+  const [newPlans, setNewPlans] = useState([]);
 
+  async function loadPlans() {
+    const response = await api.get('/plans');
+
+    setPlans(response.data);
+    setNewPlans(response.data);
+  }
   useEffect(() => {
-    async function loadPlans() {
-      const response = await api.get('/plans');
-
-      setPlans(response.data);
-    }
     loadPlans();
   }, []);
 
@@ -31,6 +33,17 @@ export default function Plan() {
       console.tron.log(err);
     }
   }
+
+  function search(text) {
+    const newData = plans.filter(item => {
+      const itemData = `${item.title.toUpperCase()}`;
+
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+    setNewPlans(newData);
+  }
   return (
     <Container>
       <TableHeader>
@@ -39,7 +52,11 @@ export default function Plan() {
           <Button background="add" onClick={() => history.push('/plan/create')}>
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
-          <input type="text" placeholder="Buscar aluno" />
+          <input
+            onChange={e => search(e.target.value)}
+            type="text"
+            placeholder="Buscar plano"
+          />
         </aside>
       </TableHeader>
       <Content>
@@ -57,7 +74,7 @@ export default function Plan() {
             </tr>
           </thead>
           <tbody>
-            {plans.map(item => (
+            {newPlans.map(item => (
               <tr key={item.id}>
                 <LabelText alignText="left">{item.title}</LabelText>
                 <LabelText>

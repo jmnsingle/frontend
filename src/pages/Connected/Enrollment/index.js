@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
+import { MdAdd, MdEdit, MdDelete, MdCheckCircle } from 'react-icons/md';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
@@ -12,11 +12,33 @@ import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Enrollment() {
   const [enrollments, setEnrollments] = useState([]);
+  const [newEnrollments, setNewEnrollments] = useState([]);
 
   useEffect(() => {
     async function loadEnrollments() {
       const response = await api.get('/enrollments');
       setEnrollments(
+        response.data.map(item => ({
+          ...item,
+          start: format(
+            parseISO(item.start_date),
+            " dd 'de' MMMM ' de ' yyy",
+
+            {
+              locale: pt,
+            }
+          ),
+          end: format(
+            parseISO(item.end_date),
+            " dd 'de' MMMM ' de ' yyy",
+
+            {
+              locale: pt,
+            }
+          ),
+        }))
+      );
+      setNewEnrollments(
         response.data.map(item => ({
           ...item,
           start: format(
@@ -49,6 +71,19 @@ export default function Enrollment() {
       console.tron.log(err);
     }
   }
+
+  function search(text) {
+    const newData = enrollments.filter(item => {
+      const itemData = `${item.student.name.toUpperCase()}`;
+
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+
+    setNewEnrollments(newData);
+  }
+
   return (
     <Container>
       <TableHeader>
@@ -60,7 +95,11 @@ export default function Enrollment() {
           >
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
-          <input type="text" placeholder="Buscar aluno" />
+          <input
+            onChange={e => search(e.target.value)}
+            type="text"
+            placeholder="Buscar aluno"
+          />
         </aside>
       </TableHeader>
       <Content>
@@ -80,13 +119,18 @@ export default function Enrollment() {
             </tr>
           </thead>
           <tbody>
-            {enrollments.map(item => (
+            {newEnrollments.map(item => (
               <tr key={item.id}>
                 <LabelText alignText="left">{item.student.name}</LabelText>
                 <LabelText>{item.plan.title}</LabelText>
                 <LabelText>{item.start}</LabelText>
                 <LabelText>{item.end}</LabelText>
-                <LabelText>icone</LabelText>
+                <LabelText>
+                  <MdCheckCircle
+                    color={item.active ? '#2cb502' : '#ddd'}
+                    size={25}
+                  />
+                </LabelText>
                 <Action>
                   <Button
                     background="edit"

@@ -12,6 +12,7 @@ import { ContainerModal, ContainerAnswer, ActionModal } from './styles';
 
 export default function HelpOrder() {
   const [helpOrders, setHelpOrders] = useState([]);
+  const [newHelpOrders, setNewHelpOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState({});
@@ -21,6 +22,7 @@ export default function HelpOrder() {
     const { data } = await api.get('/admin/help_orders');
 
     setHelpOrders(data);
+    setNewHelpOrders(data);
     setLoading(false);
   }
   useEffect(() => {
@@ -57,6 +59,17 @@ export default function HelpOrder() {
     }
   }
 
+  function search(text) {
+    const newData = helpOrders.filter(item => {
+      const itemData = `${item.student.name.toUpperCase()}`;
+
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+    setNewHelpOrders(newData);
+  }
+
   const customStyles = {
     content: {
       top: '50%',
@@ -77,7 +90,11 @@ export default function HelpOrder() {
       <TableHeader>
         <strong>Pedidos de auxílio</strong>
         <aside>
-          <input type="text" placeholder="Buscar por aluno" />
+          <input
+            onChange={e => search(e.target.value)}
+            type="text"
+            placeholder="Buscar por aluno"
+          />
         </aside>
       </TableHeader>
       <Content>
@@ -93,7 +110,7 @@ export default function HelpOrder() {
             </tr>
           </thead>
           <tbody>
-            {helpOrders.map(item => (
+            {newHelpOrders.map(item => (
               <tr key={item.id}>
                 <LabelText alignText="left">{item.student.name}</LabelText>
                 <Action>

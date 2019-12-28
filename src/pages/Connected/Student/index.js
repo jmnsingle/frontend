@@ -12,26 +12,41 @@ import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Student() {
   const [students, setStudents] = useState([]);
+  const [newStudents, setNewStudents] = useState([]);
 
+  async function loadStudents() {
+    const response = await api.get('/students');
+
+    setStudents(
+      response.data.map(item => ({
+        ...item,
+        idade: differenceInCalendarYears(
+          new Date(),
+          parseISO(
+            item.birth_date
+              .split('/')
+              .reverse()
+              .join('-')
+          )
+        ),
+      }))
+    );
+    setNewStudents(
+      response.data.map(item => ({
+        ...item,
+        idade: differenceInCalendarYears(
+          new Date(),
+          parseISO(
+            item.birth_date
+              .split('/')
+              .reverse()
+              .join('-')
+          )
+        ),
+      }))
+    );
+  }
   useEffect(() => {
-    async function loadStudents() {
-      const response = await api.get('/students');
-
-      setStudents(
-        response.data.map(item => ({
-          ...item,
-          idade: differenceInCalendarYears(
-            new Date(),
-            parseISO(
-              item.birth_date
-                .split('/')
-                .reverse()
-                .join('-')
-            )
-          ),
-        }))
-      );
-    }
     loadStudents();
   }, []);
 
@@ -43,6 +58,18 @@ export default function Student() {
       console.tron.log(err);
     }
   }
+
+  function search(text) {
+    const newData = students.filter(item => {
+      const itemData = `${item.name.toUpperCase()}`;
+
+      const textData = text.toUpperCase();
+
+      return itemData.indexOf(textData) > -1;
+    });
+    setNewStudents(newData);
+  }
+
   return (
     <Container>
       <TableHeader>
@@ -54,7 +81,11 @@ export default function Student() {
           >
             <MdAdd color="#fff" size={25} /> Cadastrar
           </Button>
-          <input type="text" placeholder="Buscar aluno" />
+          <input
+            onChange={e => search(e.target.value)}
+            type="text"
+            placeholder="Buscar aluno"
+          />
         </aside>
       </TableHeader>
       <Content>
@@ -72,7 +103,7 @@ export default function Student() {
             </tr>
           </thead>
           <tbody>
-            {students.map(item => (
+            {newStudents.map(item => (
               <tr key={item.id}>
                 <LabelText alignText="left">{item.name}</LabelText>
                 <LabelText>{item.email}</LabelText>
