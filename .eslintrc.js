@@ -31,6 +31,8 @@ module.exports = {
     "react/button-has-type": "off",
     "import/no-extraneous-dependencies": "off",
     "no-console": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "react/jsx-props-no-spreading": "off",
     "jsx-a11y/label-has-associated-control": "off",
     "camelcase": "off",

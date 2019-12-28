@@ -98,15 +98,17 @@ export default function FormEnrollment({ match }) {
               }
             );
 
-        history.push('/enrollment');
         setLoading(false);
-        toast.success(`Usuário ${id ? 'editado' : 'cadastrado'} com sucesso !`);
+        toast.success(
+          `Matrícula ${id ? 'editada' : 'cadastrada'} com sucesso !`
+        );
+        history.push('/enrollment');
       } catch (err) {
         setLoading(false);
         toast.error(
           `Falha ${
             id ? 'na edição' : 'no cadastro'
-          } do usuário. Verifique se os dados estão corretos.`
+          } da matrícula. Verifique se os dados estão corretos.`
         );
       }
     }

@@ -45,9 +45,9 @@ export default function FormPlan({ match }) {
             price,
             duration,
           });
-      history.push('/plan');
       setLoading(false);
       toast.success(`Plano ${id ? 'editado' : 'cadastrado'} com sucesso !`);
+      history.push('/plan');
     } catch (err) {
       setLoading(false);
       toast.error(`Falha  ${id ? 'na edição' : 'no cadastro'} do plano.`);

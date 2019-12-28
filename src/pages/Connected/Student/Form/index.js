@@ -77,9 +77,9 @@ export default function FormStudent({ match }) {
             weight,
           });
 
-      history.push('/student');
       setLoading(false);
       toast.success(`Estudante ${id ? 'editado' : 'cadastrado'} com sucesso !`);
+      history.push('/student');
     } catch (err) {
       setLoading(false);
       toast.error(`Falha ao ${id ? 'editar' : 'cadastrar'} estudante.`);
