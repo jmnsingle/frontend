@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { format, addMonths, parseISO } from 'date-fns';
+import PropTypes from 'prop-types';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
 import { Form } from '@rocketseat/unform';
 import Select from 'react-select';
@@ -223,3 +224,19 @@ export default function FormEnrollment({ match }) {
     </Container>
   );
 }
+
+FormEnrollment.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+};
+
+FormEnrollment.defaultProps = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: null,
+    }),
+  }),
+};

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { Form } from '@rocketseat/unform';
 import * as Yup from 'yup';
@@ -142,3 +143,19 @@ export default function FormPlan({ match }) {
     </Container>
   );
 }
+
+FormPlan.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+};
+
+FormPlan.defaultProps = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: null,
+    }),
+  }),
+};

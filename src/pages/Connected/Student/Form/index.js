@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import NumberFormat from 'react-number-format';
 import { toast } from 'react-toastify';
 import { MdArrowBack, MdCheck } from 'react-icons/md';
@@ -158,3 +159,19 @@ export default function FormStudent({ match }) {
     </Container>
   );
 }
+
+FormStudent.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string,
+    }),
+  }),
+};
+
+FormStudent.defaultProps = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      id: null,
+    }),
+  }),
+};
