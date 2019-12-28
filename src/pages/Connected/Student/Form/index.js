@@ -37,6 +37,7 @@ export default function FormStudent({ match }) {
         setLoading(false);
       }
 
+      setLoading(false);
       if (id) {
         loadStudent();
       }
@@ -104,7 +105,8 @@ export default function FormStudent({ match }) {
             </Button>
           </aside>
         </Header>
-        {loading && <Loading height={288} left={140} />}
+        {loading && <Loading height={270} left={140} />}
+
         <Content>
           <Hr>
             <Contain>

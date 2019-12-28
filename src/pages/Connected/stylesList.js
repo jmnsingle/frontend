@@ -13,7 +13,7 @@ export const Content = styled.div`
   width: 100%;
   height: 400px;
   border-radius: 4px;
-  margin-top: 25px;
+  margin-top: 0px;
 
   display: flex;
 
@@ -23,7 +23,9 @@ export const Content = styled.div`
     margin: 20px;
 
     tbody {
-      height: 100px;
+      tr {
+        height: 20px;
+      }
 
       tr:hover {
         background: #f2f2f2;
@@ -34,7 +36,7 @@ export const Content = styled.div`
 
 export const TableHeader = styled.div`
   width: 100%;
-  margin-top: 25px;
+  margin-top: 5px;
 
   display: flex;
   align-items: center;
@@ -46,6 +48,7 @@ export const TableHeader = styled.div`
 
   aside {
     display: flex;
+    margin: 5px 0;
 
     input {
       height: 32px;
@@ -59,4 +62,18 @@ export const TableHeader = styled.div`
       align-self: center;
     }
   }
+`;
+
+export const Pagination = styled.div`
+  background: #fafafa;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  width: 100%;
+  height: 40px;
+  padding-right: 10px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;

@@ -18,7 +18,7 @@ const Action = styled.td`
 const LabelText = styled.th`
   font-weight: bold;
   color: ${props => (props.title ? '#242424' : '#999')};
-  font-size: ${props => (props.title ? '18px' : '16px')};
+  font-size: ${props => (props.title ? '16px' : '14px')};
 
   ${props => alignTexts[props.alignText]};
 `;

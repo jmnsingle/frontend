@@ -22,7 +22,7 @@ export const ButtonField = styled.button`
   border: none;
   color: #fff;
   border-radius: ${props => (props.active ? '15px' : '4px')};
-  margin: 10px 0 10px 10px;
+  margin: 2px 0 2px 10px;
   height: 30px;
   width: ${props =>
     props.background === 'danger' ||

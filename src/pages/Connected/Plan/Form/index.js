@@ -65,6 +65,7 @@ export default function FormPlan({ match }) {
         setLoading(false);
       }
 
+      setLoading(false);
       if (id) {
         loadPlan();
       }
@@ -102,7 +103,7 @@ export default function FormPlan({ match }) {
             </Button>
           </aside>
         </Header>
-        {loading && <Loading height={200} left={140} />}
+        {loading && <Loading height={180} left={140} />}
         <Content>
           <Hr>
             <Contain>

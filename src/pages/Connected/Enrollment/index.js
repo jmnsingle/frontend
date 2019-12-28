@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { MdAdd, MdEdit, MdDelete, MdCheckCircle } from 'react-icons/md';
+import {
+  MdAdd,
+  MdEdit,
+  MdDelete,
+  MdCheckCircle,
+  MdArrowBack,
+  MdArrowForward,
+} from 'react-icons/md';
 import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
@@ -10,16 +17,28 @@ import Loading from '~/components/Loading';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
-import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
+import {
+  Container,
+  Content,
+  TableHeader,
+  Pagination,
+} from '~/pages/Connected/stylesList';
 
 export default function Enrollment() {
   const [loading, setLoading] = useState(false);
+  const [before, setBefore] = useState(false);
+  const [next, setNext] = useState(false);
+  const [page, setPage] = useState(1);
   const [enrollments, setEnrollments] = useState([]);
   const [newEnrollments, setNewEnrollments] = useState([]);
 
   async function loadEnrollments() {
     setLoading(true);
-    const response = await api.get('/enrollments');
+    const response = await api.get('/enrollments', {
+      params: {
+        page,
+      },
+    });
     setEnrollments(
       response.data.map(item => ({
         ...item,
@@ -66,7 +85,32 @@ export default function Enrollment() {
   }
   useEffect(() => {
     loadEnrollments();
-  }, []);
+    if (page === 1 && enrollments.length < 10) {
+      setNext(false);
+      setBefore(false);
+    } else if (page === 1 && enrollments.length >= 10) {
+      setNext(true);
+      setBefore(false);
+    } else if (page > 1 && enrollments.length < 10) {
+      setNext(false);
+      setBefore(true);
+    } else {
+      setNext(true);
+      setBefore(true);
+    }
+  }, [page, enrollments.length]);
+
+  function handlePagination(op) {
+    if (page >= 1) {
+      if (op === 1) {
+        setPage(page + 1);
+      } else {
+        setPage(page - 1);
+      }
+    } else {
+      setPage(1);
+    }
+  }
 
   async function handleDelete(id) {
     try {
@@ -160,6 +204,27 @@ export default function Enrollment() {
           </tbody>
         </table>
       </Content>
+      <Pagination>
+        <Button
+          disabled={!before}
+          onClick={() => handlePagination(0)}
+          background={before ? 'add' : 'back'}
+          type="button"
+        >
+          <MdArrowBack color="#fff" size={20} />
+          Anterior
+        </Button>
+        <strong>Quantidade de registros {enrollments.length}</strong>
+        <Button
+          disabled={!next}
+          onClick={() => handlePagination(1)}
+          background={next ? 'add' : 'back'}
+          type="button"
+        >
+          Próximo
+          <MdArrowForward color="#fff" size={20} />
+        </Button>
+      </Pagination>
     </Container>
   );
 }

@@ -19,7 +19,7 @@ Loading.propTypes = {
 };
 
 Loading.defaultProps = {
-  height: 400,
-  top: 155,
+  height: 430,
+  top: 120,
   left: 136,
 };

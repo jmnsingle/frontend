@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 import Modal from 'react-modal';
 import { Form } from '@rocketseat/unform';
 import { toast } from 'react-toastify';
@@ -7,19 +8,31 @@ import api from '~/services/api';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 import Loading from '~/components/Loading';
-import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
+import {
+  Container,
+  Content,
+  TableHeader,
+  Pagination,
+} from '~/pages/Connected/stylesList';
 import { ContainerModal, ContainerAnswer, ActionModal } from './styles';
 
 export default function HelpOrder() {
-  const [helpOrders, setHelpOrders] = useState([]);
-  const [newHelpOrders, setNewHelpOrders] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [before, setBefore] = useState(false);
+  const [next, setNext] = useState(false);
+  const [page, setPage] = useState(1);
+  const [helpOrders, setHelpOrders] = useState([]);
+  const [newHelpOrders, setNewHelpOrders] = useState([]);
   const [answer, setAnswer] = useState({});
 
   async function loaHelpOrder() {
     setLoading(true);
-    const { data } = await api.get('/admin/help_orders');
+    const { data } = await api.get('/admin/help_orders', {
+      params: {
+        page,
+      },
+    });
 
     setHelpOrders(data);
     setNewHelpOrders(data);
@@ -27,7 +40,32 @@ export default function HelpOrder() {
   }
   useEffect(() => {
     loaHelpOrder();
-  }, []);
+    if (page === 1 && helpOrders.length < 5) {
+      setNext(false);
+      setBefore(false);
+    } else if (page === 1 && helpOrders.length >= 5) {
+      setNext(true);
+      setBefore(false);
+    } else if (page > 1 && helpOrders.length < 5) {
+      setNext(false);
+      setBefore(true);
+    } else {
+      setNext(true);
+      setBefore(true);
+    }
+  }, [page, helpOrders.length]);
+
+  function handlePagination(op) {
+    if (page >= 1) {
+      if (op === 1) {
+        setPage(page + 1);
+      } else {
+        setPage(page - 1);
+      }
+    } else {
+      setPage(1);
+    }
+  }
 
   async function handleAnswer(item) {
     setAnswer({
@@ -123,7 +161,7 @@ export default function HelpOrder() {
                     </Button>
                   ) : (
                     <Button
-                      background="default"
+                      background="back"
                       onClick={() => handleAnswer(item)}
                     >
                       Respondido
@@ -135,6 +173,27 @@ export default function HelpOrder() {
           </tbody>
         </table>
       </Content>
+      <Pagination>
+        <Button
+          disabled={!before}
+          onClick={() => handlePagination(0)}
+          background={before ? 'add' : 'back'}
+          type="button"
+        >
+          <MdArrowBack color="#fff" size={20} />
+          Anterior
+        </Button>
+        <strong>Quantidade de registros {helpOrders.length}</strong>
+        <Button
+          disabled={!next}
+          onClick={() => handlePagination(1)}
+          background={next ? 'add' : 'back'}
+          type="button"
+        >
+          Próximo
+          <MdArrowForward color="#fff" size={20} />
+        </Button>
+      </Pagination>
       <Modal
         ariaHideApp={false}
         isOpen={showModal}

@@ -6,11 +6,11 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 25px;
+  margin-top: 5px;
 `;
 
 export const Content = styled.div`
-  margin-top: 25px;
+  margin-top: 5px;
   background: #fff;
   border-radius: 4px;
   padding: 20px;
@@ -57,5 +57,6 @@ export const Header = styled.div`
 
   aside {
     display: flex;
+    margin: 5px 0;
   }
 `;

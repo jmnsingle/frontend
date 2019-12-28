@@ -48,6 +48,8 @@ export default function FormEnrollment({ match }) {
 
         setLoading(false);
       }
+
+      setLoading(false);
       if (id) {
         loadEnrolment();
       }
@@ -142,7 +144,9 @@ export default function FormEnrollment({ match }) {
             </Button>
           </aside>
         </Header>
-        {loading && <Loading height={200} />}
+
+        {loading && <Loading height={190} left={144} />}
+
         <Content>
           <Hr>
             <Contain large>
