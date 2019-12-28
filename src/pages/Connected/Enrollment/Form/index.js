@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import api from '~/services/api';
 import history from '~/services/history';
 import { formatPrice } from '~/util/format';
-
+import Loading from '~/components/Loading';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
@@ -38,6 +38,7 @@ export default function FormEnrollment({ match }) {
         const { data } = await api.get(`enrollments/${id}`);
         const [start] = data.start_date.split('T');
         const [end] = data.end_date.split('T');
+
         setEnrollment({
           ...data,
           start_date: format(parseISO(start), 'yyyy-MM-dd'),
@@ -70,11 +71,13 @@ export default function FormEnrollment({ match }) {
   }, []);
 
   async function handleRegister() {
+    setLoading(true);
     if (
       enrollment.plan_id === '' ||
       enrollment.student_id === '' ||
       enrollment.start_date === ''
     ) {
+      setLoading(false);
       toast.error('Complete todos os campos para cadastrar!');
     } else {
       try {
@@ -138,6 +141,7 @@ export default function FormEnrollment({ match }) {
             </Button>
           </aside>
         </Header>
+        {loading && <Loading height={200} />}
         <Content>
           <Hr>
             <Contain large>

@@ -6,15 +6,18 @@ import history from '~/services/history';
 import api from '~/services/api';
 
 import Button from '~/components/Button';
+import Loading from '~/components/Loading';
 import { LabelText, Action } from '~/components/LabelText';
 
 import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Student() {
+  const [loading, setLoading] = useState(false);
   const [students, setStudents] = useState([]);
   const [newStudents, setNewStudents] = useState([]);
 
   async function loadStudents() {
+    setLoading(true);
     const response = await api.get('/students');
 
     setStudents(
@@ -45,6 +48,7 @@ export default function Student() {
         ),
       }))
     );
+    setLoading(false);
   }
   useEffect(() => {
     loadStudents();
@@ -53,7 +57,7 @@ export default function Student() {
   async function handleDelete(id) {
     try {
       await api.delete(`students/${id}`);
-      window.location.reload();
+      loadStudents();
     } catch (err) {
       console.tron.log(err);
     }
@@ -89,6 +93,8 @@ export default function Student() {
         </aside>
       </TableHeader>
       <Content>
+        {loading && <Loading />}
+
         <table>
           <thead>
             <tr>

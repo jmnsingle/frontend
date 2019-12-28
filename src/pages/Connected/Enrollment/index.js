@@ -1,74 +1,83 @@
 import React, { useEffect, useState } from 'react';
 import { MdAdd, MdEdit, MdDelete, MdCheckCircle } from 'react-icons/md';
+import { toast } from 'react-toastify';
 import { format, parseISO } from 'date-fns';
 import pt from 'date-fns/locale/pt';
 
 import history from '~/services/history';
 import api from '~/services/api';
+import Loading from '~/components/Loading';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
 import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Enrollment() {
+  const [loading, setLoading] = useState(false);
   const [enrollments, setEnrollments] = useState([]);
   const [newEnrollments, setNewEnrollments] = useState([]);
 
+  async function loadEnrollments() {
+    setLoading(true);
+    const response = await api.get('/enrollments');
+    setEnrollments(
+      response.data.map(item => ({
+        ...item,
+        start: format(
+          parseISO(item.start_date),
+          " dd 'de' MMMM ' de ' yyy",
+
+          {
+            locale: pt,
+          }
+        ),
+        end: format(
+          parseISO(item.end_date),
+          " dd 'de' MMMM ' de ' yyy",
+
+          {
+            locale: pt,
+          }
+        ),
+      }))
+    );
+    setNewEnrollments(
+      response.data.map(item => ({
+        ...item,
+        start: format(
+          parseISO(item.start_date),
+          " dd 'de' MMMM ' de ' yyy",
+
+          {
+            locale: pt,
+          }
+        ),
+        end: format(
+          parseISO(item.end_date),
+          " dd 'de' MMMM ' de ' yyy",
+
+          {
+            locale: pt,
+          }
+        ),
+      }))
+    );
+    setLoading(false);
+  }
   useEffect(() => {
-    async function loadEnrollments() {
-      const response = await api.get('/enrollments');
-      setEnrollments(
-        response.data.map(item => ({
-          ...item,
-          start: format(
-            parseISO(item.start_date),
-            " dd 'de' MMMM ' de ' yyy",
-
-            {
-              locale: pt,
-            }
-          ),
-          end: format(
-            parseISO(item.end_date),
-            " dd 'de' MMMM ' de ' yyy",
-
-            {
-              locale: pt,
-            }
-          ),
-        }))
-      );
-      setNewEnrollments(
-        response.data.map(item => ({
-          ...item,
-          start: format(
-            parseISO(item.start_date),
-            " dd 'de' MMMM ' de ' yyy",
-
-            {
-              locale: pt,
-            }
-          ),
-          end: format(
-            parseISO(item.end_date),
-            " dd 'de' MMMM ' de ' yyy",
-
-            {
-              locale: pt,
-            }
-          ),
-        }))
-      );
-    }
     loadEnrollments();
   }, []);
 
   async function handleDelete(id) {
     try {
+      setLoading(true);
       await api.delete(`enrollments/${id}`);
-      window.location.reload();
+      loadEnrollments();
+      setLoading(false);
+      toast.success('Matrícula deletada com sucesso !');
     } catch (err) {
-      console.tron.log(err);
+      setLoading(false);
+      toast.error('Falha ao deletar matrícula.');
     }
   }
 
@@ -102,6 +111,7 @@ export default function Enrollment() {
           />
         </aside>
       </TableHeader>
+      {loading && <Loading />}
       <Content>
         <table>
           <thead>

@@ -6,7 +6,7 @@ import api from '~/services/api';
 
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
-
+import Loading from '~/components/Loading';
 import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 import { ContainerModal, ContainerAnswer, ActionModal } from './styles';
 
@@ -52,6 +52,8 @@ export default function HelpOrder() {
         setShowModal(false);
         setLoading(false);
       } catch (err) {
+        setLoading(false);
+        setShowModal(false);
         toast.error('Falha ao responder.');
       }
     } else {
@@ -97,6 +99,7 @@ export default function HelpOrder() {
           />
         </aside>
       </TableHeader>
+      {loading && <Loading />}
       <Content>
         <table>
           <thead>

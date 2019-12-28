@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import api from '~/services/api';
 import history from '~/services/history';
 
+import Loading from '~/components/Loading';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
@@ -26,16 +27,21 @@ export default function FormStudent({ match }) {
 
   useEffect(() => {
     try {
+      setLoading(true);
       // eslint-disable-next-line no-inner-declarations
       async function loadStudent() {
         const { data } = await api.get(`students/${id}`);
+
         setStudent(data);
+        setLoading(false);
       }
+
       if (id) {
         loadStudent();
       }
     } catch (err) {
       toast.error('Falha ao buscar dados do estudante.');
+      setLoading(false);
       history.push('/student');
     }
   }, []);
@@ -97,6 +103,7 @@ export default function FormStudent({ match }) {
             </Button>
           </aside>
         </Header>
+        {loading && <Loading height={288} left={140} />}
         <Content>
           <Hr>
             <Contain>

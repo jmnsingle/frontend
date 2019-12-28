@@ -8,7 +8,7 @@ import { formatPrice } from '~/util/format';
 
 import history from '~/services/history';
 import api from '~/services/api';
-
+import Loading from '~/components/Loading';
 import InputField from '~/components/Input';
 import Button from '~/components/Button';
 
@@ -55,7 +55,6 @@ export default function FormPlan({ match }) {
 
   useEffect(() => {
     try {
-      const abortController = new AbortController();
       setLoading(true);
       // eslint-disable-next-line no-inner-declarations
       async function loadPlan() {
@@ -68,12 +67,10 @@ export default function FormPlan({ match }) {
       if (id) {
         loadPlan();
       }
-      return () => {
-        abortController.abort();
-      };
     } catch (err) {
       toast.error('Falha no carregamento do plano.');
       setLoading(false);
+      history.push('/plan');
     }
   }, []);
 
@@ -104,6 +101,7 @@ export default function FormPlan({ match }) {
             </Button>
           </aside>
         </Header>
+        {loading && <Loading height={200} left={140} />}
         <Content>
           <Hr>
             <Contain>

@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { MdAdd, MdEdit, MdDelete } from 'react-icons/md';
-import { differenceInCalendarYears, parseISO } from 'date-fns';
 import { formatPrice } from '~/util/format';
 
 import history from '~/services/history';
 import api from '~/services/api';
-
+import Loading from '~/components/Loading';
 import Button from '~/components/Button';
 import { LabelText, Action } from '~/components/LabelText';
 
 import { Container, Content, TableHeader } from '~/pages/Connected/stylesList';
 
 export default function Plan() {
+  const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState([]);
   const [newPlans, setNewPlans] = useState([]);
 
   async function loadPlans() {
+    setLoading(true);
     const response = await api.get('/plans');
 
     setPlans(response.data);
     setNewPlans(response.data);
+    setLoading(false);
   }
   useEffect(() => {
     loadPlans();
@@ -27,10 +29,12 @@ export default function Plan() {
 
   async function handleDelete(id) {
     try {
+      setLoading(true);
       await api.delete(`plans/${id}`);
-      window.location.reload();
+      loadPlans();
+      setLoading(false);
     } catch (err) {
-      console.tron.log(err);
+      setLoading(false);
     }
   }
 
@@ -60,6 +64,7 @@ export default function Plan() {
         </aside>
       </TableHeader>
       <Content>
+        {loading && <Loading />}
         <table>
           <thead>
             <tr>
