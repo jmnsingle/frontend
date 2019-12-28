@@ -73,7 +73,7 @@ export default function FormPlan({ match }) {
       setLoading(false);
       history.push('/plan');
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const total = formatPrice(

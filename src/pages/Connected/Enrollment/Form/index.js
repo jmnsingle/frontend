@@ -56,7 +56,7 @@ export default function FormEnrollment({ match }) {
       history.push('/enrolment');
       setLoading(false);
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     async function handleData() {
